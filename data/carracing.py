@@ -12,7 +12,7 @@ def generate_data(rollouts, data_dir, noise_type): # pylint: disable=R0914
     """ Generates data """
     assert exists(data_dir), "The data directory does not exist..."
 
-    env = gym.make("CarRacing-v0")
+    env = gym.make("CarRacing-v2")
     seq_len = 1000
 
     for i in range(rollouts):
