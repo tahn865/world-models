@@ -9,7 +9,7 @@ import numpy as np
 from utils.misc import sample_continuous_policy
 
 def generate_data(rollouts, data_dir, noise_type): # pylint: disable=R0914
-    """ Generates data """
+    """Generates data"""
     assert exists(data_dir), "The data directory does not exist..."
 
     env = gym.make("CarRacing-v2")
@@ -17,7 +17,7 @@ def generate_data(rollouts, data_dir, noise_type): # pylint: disable=R0914
 
     for i in range(rollouts):
         env.reset()
-        env.env.viewer.window.dispatch_events()
+        
         if noise_type == 'white':
             a_rollout = [env.action_space.sample() for _ in range(seq_len)]
         elif noise_type == 'brown':
@@ -33,10 +33,12 @@ def generate_data(rollouts, data_dir, noise_type): # pylint: disable=R0914
             t += 1
 
             s, r, done, _ = env.step(action)
-            env.env.viewer.window.dispatch_events()
-            s_rollout += [s]
-            r_rollout += [r]
-            d_rollout += [done]
+            env.render()  # Render without accessing viewer directly
+            
+            s_rollout.append(s)
+            r_rollout.append(r)
+            d_rollout.append(done)
+            
             if done:
                 print("> End of rollout {}, {} frames...".format(i, len(s_rollout)))
                 np.savez(join(data_dir, 'rollout_{}'.format(i)),
